@@ -1,4 +1,4 @@
-package com.techforb.techforb_webapi.webapi.configuration;
+package com.techforb.techforb_webapi.infrastructure.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
