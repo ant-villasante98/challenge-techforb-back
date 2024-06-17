@@ -1,6 +1,5 @@
 package com.techforb.techforb_webapi.core.dtos.Response;
 
-import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

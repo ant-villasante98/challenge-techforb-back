@@ -3,6 +3,7 @@ package com.techforb.techforb_webapi.webapi.controllers;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.techforb.techforb_webapi.core.dtos.Request.LoginRequest;
+import com.techforb.techforb_webapi.core.dtos.Request.RefreshTokenRequest;
 import com.techforb.techforb_webapi.core.dtos.Request.RegisterUserRequest;
 import com.techforb.techforb_webapi.core.dtos.Response.AuthResponse;
 import com.techforb.techforb_webapi.core.services.AuthService;
@@ -31,6 +32,13 @@ public class AuthController {
     public ResponseEntity<Void> register(@RequestBody RegisterUserRequest request) {
         authService.registre(request);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("refresh")
+    public ResponseEntity<AuthResponse> refresh(@RequestBody RefreshTokenRequest request) {
+        String x = "";
+        AuthResponse response = authService.refresh(request.getRefreshToken());
+        return ResponseEntity.ok().body(response);
     }
 
 }

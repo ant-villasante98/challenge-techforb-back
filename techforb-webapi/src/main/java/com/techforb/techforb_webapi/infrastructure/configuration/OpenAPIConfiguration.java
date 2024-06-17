@@ -9,21 +9,20 @@ import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 
-// TODO: bug de openapi en las peticiones
 @Configuration
 public class OpenAPIConfiguration {
-    @Bean
-    OpenAPI customizeOpenAPI() {
-        final String securitySchemeName = "Bearer Authentication";
-        return new OpenAPI()
-                .info(new Info().title("Monitoring"))
-                .addSecurityItem(new SecurityRequirement()
-                        .addList(securitySchemeName))
-                .components(new Components()
-                        .addSecuritySchemes(securitySchemeName, new SecurityScheme()
-                                .name(securitySchemeName)
-                                .type(SecurityScheme.Type.HTTP)
-                                .scheme("bearer")
-                                .bearerFormat("JWT")));
-    }
+        @Bean
+        OpenAPI customizeOpenAPI() {
+                final String securitySchemeName = "Bearer Authentication";
+                return new OpenAPI()
+                                .info(new Info().title("Monitoring"))
+                                .addSecurityItem(new SecurityRequirement()
+                                                .addList(securitySchemeName))
+                                .components(new Components()
+                                                .addSecuritySchemes(securitySchemeName, new SecurityScheme()
+                                                                .name(securitySchemeName)
+                                                                .type(SecurityScheme.Type.HTTP)
+                                                                .scheme("bearer")
+                                                                .bearerFormat("JWT")));
+        }
 }

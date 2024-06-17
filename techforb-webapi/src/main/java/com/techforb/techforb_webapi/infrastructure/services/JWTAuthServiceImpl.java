@@ -1,9 +1,11 @@
 package com.techforb.techforb_webapi.infrastructure.services;
 
 import java.security.Key;
+import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.Function;
 
 import javax.crypto.SecretKey;
@@ -94,5 +96,12 @@ public class JWTAuthServiceImpl implements JwtService {
     private Key getSignInKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    @Override
+    public String generateRefreshToken() {
+        String value = UUID.randomUUID().toString();
+        String encodedValue = Base64.getEncoder().encodeToString(value.getBytes());
+        return encodedValue;
     }
 }

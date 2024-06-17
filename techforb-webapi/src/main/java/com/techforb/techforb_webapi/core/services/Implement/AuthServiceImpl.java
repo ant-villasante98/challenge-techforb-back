@@ -1,5 +1,6 @@
 package com.techforb.techforb_webapi.core.services.Implement;
 
+import java.util.Date;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,10 +8,12 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException.Unauthorized;
 
 import com.techforb.techforb_webapi.core.dtos.Request.LoginRequest;
 import com.techforb.techforb_webapi.core.dtos.Request.RegisterUserRequest;
 import com.techforb.techforb_webapi.core.dtos.Response.AuthResponse;
+import com.techforb.techforb_webapi.core.models.RefreshToken;
 import com.techforb.techforb_webapi.core.models.User;
 import com.techforb.techforb_webapi.core.reposittories.UserRepository;
 import com.techforb.techforb_webapi.core.services.AuthService;
@@ -29,6 +32,8 @@ public class AuthServiceImpl implements AuthService {
     @Autowired
     JwtService jwtService;
 
+    private final String typeAuth = "Bearer";
+
     @Override
     public AuthResponse login(LoginRequest loginRequest) {
 
@@ -41,10 +46,15 @@ public class AuthServiceImpl implements AuthService {
 
         String accessToken = jwtService.generateToken(foundUser);
 
-        // TODO: Implementar refresh token
-        String refreshToken = "refresh-token";
+        String refreshToken = jwtService.generateRefreshToken();
 
-        return new AuthResponse(accessToken, jwtService.getExpirationTime(), refreshToken, "Bearer");
+        Date expirationDateRT = new Date(System.currentTimeMillis() + (2 * jwtService.getExpirationTime()));
+
+        foundUser.setRefreshToken(new RefreshToken(refreshToken, expirationDateRT));
+
+        userRepository.saveAndFlush(foundUser);
+
+        return new AuthResponse(accessToken, jwtService.getExpirationTime(), refreshToken, typeAuth);
     }
 
     @Override
@@ -59,15 +69,29 @@ public class AuthServiceImpl implements AuthService {
                 .firstName(userRequest.getFirstName())
                 .lastName(userRequest.getLastName())
                 .email(userRequest.getEmail())
-                .password(passwordEncoder.encode(userRequest.getPassword())).build();
+                .password(passwordEncoder.encode(userRequest.getPassword())).refreshToken(null).build();
 
         userRepository.save(user);
     }
 
     @Override
     public AuthResponse refresh(String refreshToken) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'refresh'");
+        User foundUser = userRepository.findByRefreshToken(refreshToken).orElseThrow();
+        if (new Date().after(foundUser.getRefreshToken().getExpirationTime())) {
+            throw new RuntimeException("Unauthorization");
+        }
+
+        String accessToken = jwtService.generateToken(foundUser);
+
+        String newRefreshToken = jwtService.generateRefreshToken();
+
+        Date expirationDateRT = new Date(System.currentTimeMillis() + (2 * jwtService.getExpirationTime()));
+
+        foundUser.setRefreshToken(new RefreshToken(newRefreshToken, expirationDateRT));
+
+        userRepository.saveAndFlush(foundUser);
+        return new AuthResponse(accessToken, jwtService.getExpirationTime(), newRefreshToken, typeAuth);
+
     }
 
 }

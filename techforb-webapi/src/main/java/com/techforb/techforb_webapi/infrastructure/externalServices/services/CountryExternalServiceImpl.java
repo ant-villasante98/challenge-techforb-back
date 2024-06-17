@@ -25,8 +25,9 @@ public class CountryExternalServiceImpl implements CountryService {
 
         ExtCountry[] countries = response.getBody();
         List<ExtCountry> listC = Arrays.asList(countries);
-        ExtCountry item = listC.get(0);
-        Country test = new Country(item.getTranslations().get("spa").getCommon(), item.getFlags().getPng());
+        // ExtCountry item = listC.get(0);
+        // Country test = new Country(item.getTranslations().get("spa").getCommon(),
+        // item.getFlags().getPng());
         return listC.stream().map(x -> new Country(x.getTranslations().get("spa").getCommon(),
                 x.getFlags().getPng())).toList();
     }
