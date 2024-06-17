@@ -9,6 +9,7 @@ import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 
+// TODO: bug de openapi en las peticiones
 @Configuration
 public class OpenAPIConfiguration {
     @Bean
