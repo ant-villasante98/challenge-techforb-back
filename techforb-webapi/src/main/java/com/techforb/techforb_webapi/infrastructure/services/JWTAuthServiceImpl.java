@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import com.techforb.techforb_webapi.core.exceptions.UnauthorizedException;
 import com.techforb.techforb_webapi.core.services.JwtService;
 
 import io.jsonwebtoken.Claims;
@@ -84,13 +85,18 @@ public class JWTAuthServiceImpl implements JwtService {
     }
 
     private Claims extractAllClaims(String token) {
-        SecretKey secretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(token));
-        return Jwts
-                .parser()
-                .verifyWith(secretKey)
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
+        try {
+
+            SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey));
+            return Jwts
+                    .parser()
+                    .verifyWith(key)
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload();
+        } catch (Exception ex) {
+            throw new UnauthorizedException();
+        }
     }
 
     private Key getSignInKey() {

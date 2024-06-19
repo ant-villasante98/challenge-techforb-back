@@ -2,6 +2,7 @@ package com.techforb.techforb_webapi.core.services;
 
 import java.util.List;
 
+import com.techforb.techforb_webapi.core.dtos.Response.GlobalReading;
 import com.techforb.techforb_webapi.core.models.Plant;
 
 public interface PlantService {
@@ -16,5 +17,7 @@ public interface PlantService {
     void remove(long id);
 
     void create(String name, String countryName, String countryFlagImage);
+
+    GlobalReading getGlobalReading();
 
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.techforb.techforb_webapi.core.dtos.Response.GlobalReading;
 import com.techforb.techforb_webapi.core.models.Country;
 import com.techforb.techforb_webapi.core.models.Plant;
 import com.techforb.techforb_webapi.core.reposittories.PlantRepository;
@@ -31,7 +32,7 @@ public class PlantServiceImpl implements PlantService {
     @Override
     public void update(long id, long numberOfReadings, long numberOfRedAlerts, long numberOfMediumAlerts,
             long numberOfDisabledSensors) {
-        Plant foundPlant = getById(numberOfDisabledSensors);
+        Plant foundPlant = getById(id);
         foundPlant.setNumberOfReadings(numberOfReadings);
         foundPlant.setNumberOfRedAlerts(numberOfRedAlerts);
         foundPlant.setNumberOfMediumAlerts(numberOfMediumAlerts);
@@ -60,6 +61,19 @@ public class PlantServiceImpl implements PlantService {
                 .build();
 
         plantRepository.saveAndFlush(newPlant);
+    }
+
+    @Override
+    public GlobalReading getGlobalReading() {
+        List<Plant> plantList = plantRepository.findAll();
+        GlobalReading global = new GlobalReading(0, 0, 0, 0);
+        plantList.stream().forEach(x -> {
+            global.setDisableSensors(global.getDisableSensors() + x.getNumberOfDisabledSensors());
+            global.setMediumAlerts(global.getMediumAlerts() + x.getNumberOfMediumAlerts());
+            global.setReadingOK(global.getReadingOK() + x.getNumberOfReadings());
+            global.setRedAlerts(global.getRedAlerts() + x.getNumberOfRedAlerts());
+        });
+        return global;
     }
 
 }

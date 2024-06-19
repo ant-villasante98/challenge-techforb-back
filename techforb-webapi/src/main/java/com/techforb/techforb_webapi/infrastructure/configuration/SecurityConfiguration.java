@@ -37,9 +37,10 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(csrf -> csrf.disable())
+        http.csrf(csrf -> csrf.disable()).httpBasic(x -> x.disable())
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/swagger/**", "/swagger-ui/**", "/api-docs/**").permitAll()
+                        .requestMatchers("/api/v1/auth/**").permitAll()
                         .anyRequest().permitAll())
                 .sessionManagement(sess -> {
                     sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS);

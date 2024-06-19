@@ -7,8 +7,13 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PlantCreateRequest {
-    private String name;
-    private String countryName;
-    private String countryFlag;
+public class PlantUpdateRequest {
+
+    private long numberOfReadings;
+
+    private long numberOfRedAlerts;
+
+    private long numberOfMediumAlerts;
+
+    private long numberOfDisabledSensors;
 }

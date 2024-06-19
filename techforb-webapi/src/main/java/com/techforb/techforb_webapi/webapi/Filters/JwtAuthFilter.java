@@ -44,7 +44,10 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             @NonNull FilterChain filterChain) throws ServletException, IOException {
         final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+        // TODO: filtro temporal
+        final String requestURI = request.getRequestURI();
+
+        if (authHeader == null || !authHeader.startsWith("Bearer ") || requestURI.startsWith("/api/v1/auth")) {
             filterChain.doFilter(request, response);
             return;
         }
