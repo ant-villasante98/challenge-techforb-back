@@ -35,6 +35,7 @@ public class PlantController {
     PlantDtoMapper dtoMapper;
 
     @PostMapping()
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Void> create(@RequestBody PlantCreateRequest request) {
         plantService.create(request.getName(), request.getCountryName(), request.getCountryFlag());
 
@@ -42,6 +43,7 @@ public class PlantController {
     }
 
     @GetMapping()
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<SuccessResponse<List<PlantResponse>>> getAll() {
         List<Plant> plants = plantService.getAll();
         List<PlantResponse> plantResponse = plants.stream().map(dtoMapper::apply).toList();
@@ -59,12 +61,14 @@ public class PlantController {
     }
 
     @DeleteMapping("{id}")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Void> deleteOne(@PathVariable long id) {
         plantService.remove(id);
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("{id}")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Void> updateOne(@PathVariable long id, @RequestBody PlantUpdateRequest request) {
         plantService.update(id, request.getNumberOfReadings(), request.getNumberOfRedAlerts(),
                 request.getNumberOfMediumAlerts(),
@@ -73,6 +77,7 @@ public class PlantController {
     }
 
     @GetMapping("global-reading")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<SuccessResponse<GlobalReading>> getMethodName() {
         GlobalReading global = plantService.getGlobalReading();
         SuccessResponse<GlobalReading> response = SuccessResponse.create(global, HttpStatus.OK.value());
