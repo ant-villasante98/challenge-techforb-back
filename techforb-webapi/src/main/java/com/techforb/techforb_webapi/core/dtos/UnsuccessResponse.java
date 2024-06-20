@@ -13,5 +13,6 @@ public class UnsuccessResponse {
     private String message;
     private int status;
     private String exception;
+    @Nullable
     private Object details;
 }

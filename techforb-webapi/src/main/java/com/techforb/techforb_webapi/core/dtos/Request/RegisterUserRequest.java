@@ -12,17 +12,17 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RegisterUserRequest {
-    @Email
-    @NotBlank
+    @Email(message = "El email es invalido.")
+    @NotBlank(message = "El email es requerido.")
     private String email;
 
-    @Length(min = 8)
-    @NotBlank
+    @Length(min = 8, message = "Debe tener 8 caracteres o mas.")
+    @NotBlank(message = "La contraseña es requerida.")
     private String password;
 
-    @NotBlank
+    @NotBlank(message = "El nombre es requerido.")
     private String firstName;
 
-    @NotBlank
+    @NotBlank(message = "El apellido es requerido.")
     private String lastName;
 }
