@@ -10,9 +10,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UnsuccessResponse {
-    private String message;
+    private String title;
     private int status;
-    private String exception;
+    private String type;
     @Nullable
-    private Object details;
+    private Object errors;
 }
