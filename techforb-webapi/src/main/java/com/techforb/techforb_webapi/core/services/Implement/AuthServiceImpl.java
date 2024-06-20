@@ -1,32 +1,25 @@
 package com.techforb.techforb_webapi.core.services.Implement;
 
 import java.nio.charset.StandardCharsets;
-import java.security.Key;
-import java.security.MessageDigest;
 import java.util.Date;
 import java.util.Optional;
-import java.util.Base64.Encoder;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.util.DigestUtils;
 
 import com.google.common.hash.Hashing;
 import com.techforb.techforb_webapi.core.dtos.Request.LoginRequest;
 import com.techforb.techforb_webapi.core.dtos.Request.RegisterUserRequest;
 import com.techforb.techforb_webapi.core.dtos.Response.AuthResponse;
+import com.techforb.techforb_webapi.core.exceptions.AlreadyExistsException;
 import com.techforb.techforb_webapi.core.exceptions.UnauthorizedException;
 import com.techforb.techforb_webapi.core.models.RefreshToken;
 import com.techforb.techforb_webapi.core.models.User;
 import com.techforb.techforb_webapi.core.reposittories.UserRepository;
 import com.techforb.techforb_webapi.core.services.AuthService;
 import com.techforb.techforb_webapi.core.services.JwtService;
-
-import io.jsonwebtoken.io.Decoders;
-import io.jsonwebtoken.security.Keys;
-import jakarta.xml.bind.DatatypeConverter;
 
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -75,8 +68,8 @@ public class AuthServiceImpl implements AuthService {
     public void registre(RegisterUserRequest userRequest) {
         Optional<User> foundUser = userRepository.findByEmail(userRequest.getEmail());
         if (foundUser.isPresent()) {
-            // TODO: Personalizar exception
-            throw new RuntimeException("El email ya existe");
+
+            throw new AlreadyExistsException("El email ya existe.");
         }
 
         User user = User.builder()

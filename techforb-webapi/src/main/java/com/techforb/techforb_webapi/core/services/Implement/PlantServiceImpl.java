@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.techforb.techforb_webapi.core.dtos.Response.GlobalReading;
+import com.techforb.techforb_webapi.core.exceptions.NotFoundException;
 import com.techforb.techforb_webapi.core.models.Country;
 import com.techforb.techforb_webapi.core.models.Plant;
 import com.techforb.techforb_webapi.core.reposittories.PlantRepository;
@@ -19,9 +20,8 @@ public class PlantServiceImpl implements PlantService {
 
     @Override
     public Plant getById(long id) {
-        // TODO: perzonalizar exception
         return plantRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("no se encontro el id" + id));
+                .orElseThrow(() -> new NotFoundException());
     }
 
     @Override

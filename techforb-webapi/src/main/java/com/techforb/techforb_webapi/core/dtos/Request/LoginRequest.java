@@ -1,5 +1,7 @@
 package com.techforb.techforb_webapi.core.dtos.Request;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,6 +10,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class LoginRequest {
+    @NotBlank(message = "El email es requerido.")
+    @Email(message = "El email es invalido.")
     private String email;
+
+    @NotBlank(message = "El password es requerido.")
     private String password;
 }
