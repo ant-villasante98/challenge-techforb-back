@@ -5,8 +5,6 @@ import java.util.Date;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.google.common.hash.Hashing;
@@ -26,10 +24,6 @@ public class AuthServiceImpl implements AuthService {
 
     @Autowired
     UserRepository userRepository;
-    @Autowired
-    PasswordEncoder passwordEncoder;
-    @Autowired
-    AuthenticationManager authenticationManager;
 
     @Autowired
     JwtService jwtService;
@@ -38,11 +32,6 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthResponse login(LoginRequest loginRequest) {
-
-        // authenticationManager.authenticate(
-        // new UsernamePasswordAuthenticationToken(
-        // loginRequest.getEmail(),
-        // loginRequest.getPassword()));
 
         User foundUser = userRepository.findByEmail(loginRequest.getEmail())
                 .orElseThrow(() -> new UnauthorizedException());
