@@ -72,9 +72,10 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthResponse refresh(String refreshToken) {
-        User foundUser = userRepository.findByRefreshToken(refreshToken).orElseThrow();
+        User foundUser = userRepository.findByRefreshToken(refreshToken)
+                .orElseThrow(() -> new UnauthorizedException());
         if (new Date().after(foundUser.getRefreshToken().getExpirationTime())) {
-            throw new RuntimeException("Unauthorization");
+            throw new UnauthorizedException();
         }
 
         String accessToken = jwtService.generateToken(foundUser);
